@@ -294,8 +294,8 @@ export default function ChatScreen() {
     marginBottom:
       -safeAreaInset.bottom +
       keyboardHeight.value -
-      (keyboardHeight.value ? 49 : 0) -
-      (Platform.OS === "ios" ? 40 : 0),
+      (keyboardHeight.value ? 49 : -20) -
+      (Platform.OS === "ios" && keyboardHeight.value ? 40 : 0),
   }));
 
   const startTypewriterEffectOnThinkingMessage = (
