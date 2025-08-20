@@ -209,14 +209,11 @@ export default function DashboardScreen() {
               useNativeDriver: true,
             }),
           ]).start(() => {
-            setTimeout(
-              () => {
-                if (isEditMode && !isActive) {
-                  shake();
-                }
-              },
-              500 + Math.random() * 1000
-            );
+            setTimeout(() => {
+              if (isEditMode && !isActive) {
+                shake();
+              }
+            }, 500 + Math.random() * 1000);
           });
         };
 
@@ -301,7 +298,10 @@ export default function DashboardScreen() {
   const currentDashboard = selectedDashboard.data as Dashboard | undefined;
 
   return (
-    <SafeAreaView className="flex-1 bg-background-primary">
+    <SafeAreaView
+      className="flex-1 bg-surface-primary"
+      edges={["top", "left", "right"]}
+    >
       <View className="flex-row items-center justify-between px-6 py-5 bg-surface-primary border-b border-border-primary">
         <Text className="text-headline-md font-bold text-text-primary">
           Dashboards

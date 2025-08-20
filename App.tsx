@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
+import Constants from "expo-constants";
 import { useFonts } from "expo-font";
 import { StatusBar } from "expo-status-bar";
 import { BarChart3, MessageCircle } from "lucide-react-native";
@@ -45,11 +46,13 @@ function getQueryClient() {
 function AppContent() {
   const safeAreaInset = useSafeAreaInsets();
   const queryClient = getQueryClient();
+  const url = Constants.expoConfig?.extra?.serverUrl || "localhost";
+  const port = Constants.expoConfig?.extra?.serverPort || "3000";
   const [trpcClientInstance] = useState(() =>
     createTRPCClient<AppRouter>({
       links: [
         httpBatchLink({
-          url: "http://192.168.100.57:3001/trpc",
+          url: `http://${url}:${port}/trpc`,
         }),
       ],
     })

@@ -168,7 +168,7 @@ export default function ChatScreen() {
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
+      "keyboardWillShow",
       (e) => {
         keyboardHeight.value = withTiming(e.endCoordinates.height, {
           duration: 250,
@@ -179,7 +179,7 @@ export default function ChatScreen() {
     );
 
     const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
+      "keyboardWillHide",
       () => {
         keyboardHeight.value = withTiming(0, {
           duration: 250,
