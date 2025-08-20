@@ -41,7 +41,7 @@ This will:
 
 ## Demo
 
-![Demo](./assets/demo/demo.mp4)
+https://github.com/user-attachments/assets/4cd216a5-81c2-46f1-9b96-d7bb0e070097
 
 ### Features
 
