@@ -39,6 +39,10 @@ This will:
 2. Scan the QR code displayed in your terminal using the Expo Go app
 3. The app will build and load on your device
 
+## Demo
+
+![Demo](./demo.mp4)
+
 ### Features
 
 - 💬 Chat functionality with real-time messaging
