@@ -41,7 +41,7 @@ This will:
 
 ## Demo
 
-![Demo](./demo.mp4)
+![Demo](./assets/demo.mp4)
 
 ### Features
 
