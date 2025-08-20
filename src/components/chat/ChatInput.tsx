@@ -1,6 +1,6 @@
 import { Send } from "lucide-react-native";
 import React from "react";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, Platform, View } from "react-native";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { IconButton, Input } from "../ui";
@@ -28,12 +28,16 @@ export function ChatInput({
 }: ChatInputProps) {
   const insets = useSafeAreaInsets();
 
+  const TAB_BAR_HEIGHT = 49;
+  const navigationBarHeight =
+    TAB_BAR_HEIGHT + insets.bottom + (Platform.OS === "ios" ? 35 : 0);
+
   const inputAreaAnimatedStyle = useAnimatedStyle(() => ({
     transform: [
       {
         translateY:
           keyboardHeight.value > 0
-            ? -(keyboardHeight.value - insets.bottom - 85)
+            ? -(keyboardHeight.value - navigationBarHeight)
             : 0,
       },
     ],

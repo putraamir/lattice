@@ -4,6 +4,7 @@ import {
   Dimensions,
   FlatList,
   Keyboard,
+  Platform,
   Pressable,
   Text,
   TouchableOpacity,
@@ -16,7 +17,10 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import {
@@ -50,6 +54,7 @@ export default function ChatScreen() {
         selectedConversationId: string | null;
       }
   );
+  const safeAreaInset = useSafeAreaInsets();
 
   const sidebarX = useSharedValue(0);
   const keyboardHeight = useSharedValue(0);
@@ -167,32 +172,31 @@ export default function ChatScreen() {
   }, [selectedConversation.data?.messages, isAiThinking]);
 
   useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardWillShow",
-      (e) => {
-        keyboardHeight.value = withTiming(e.endCoordinates.height, {
-          duration: 250,
-        });
+    const showEvent =
+      Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow";
+    const hideEvent =
+      Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide";
 
+    const keyboardShowListener = Keyboard.addListener(showEvent, (e) => {
+      keyboardHeight.value = withTiming(e.endCoordinates.height, {
+        duration: 250,
+      });
+
+      flatListRef.current?.scrollToEnd({ animated: true });
+    });
+
+    const keyboardHideListener = Keyboard.addListener(hideEvent, () => {
+      keyboardHeight.value = withTiming(0, {
+        duration: 250,
+      });
+      setTimeout(() => {
         flatListRef.current?.scrollToEnd({ animated: true });
-      }
-    );
-
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardWillHide",
-      () => {
-        keyboardHeight.value = withTiming(0, {
-          duration: 250,
-        });
-        setTimeout(() => {
-          flatListRef.current?.scrollToEnd({ animated: true });
-        }, 100);
-      }
-    );
+      }, 100);
+    });
 
     return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
+      keyboardShowListener.remove();
+      keyboardHideListener.remove();
     };
   }, [keyboardHeight]);
 
@@ -283,6 +287,15 @@ export default function ChatScreen() {
 
   const mainContentAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: sidebarX.value }],
+  }));
+
+  const messagesContainerAnimatedStyle = useAnimatedStyle(() => ({
+    flex: 1,
+    marginBottom:
+      -safeAreaInset.bottom +
+      keyboardHeight.value -
+      (keyboardHeight.value ? 49 : 0) -
+      (Platform.OS === "ios" ? 40 : 0),
   }));
 
   const startTypewriterEffectOnThinkingMessage = (
@@ -448,7 +461,10 @@ export default function ChatScreen() {
               <View className="w-10" />
             </View>
 
-            <View className="flex-1 bg-background-primary">
+            <Animated.View
+              className="flex flex-1 bg-background-primary"
+              style={messagesContainerAnimatedStyle}
+            >
               <FlatList
                 ref={flatListRef}
                 data={[
@@ -494,7 +510,7 @@ export default function ChatScreen() {
                   }, 100);
                 }}
               />
-            </View>
+            </Animated.View>
 
             <ChatInput
               value={inputText}
